@@ -36,44 +36,34 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TutorialDataService from "@/services/TutorialDataService";
+import { context } from "../http-common";
 import Tutorial from "@/types/Tutorial";
-import ResponseData from "@/types/ResponseData";
+import { getEntityRef } from "remult";
 
 export default defineComponent({
   name: "add-tutorial",
   data() {
     return {
-      tutorial: {
-        id: null,
-        title: "",
-        description: "",
-        published: false,
-      } as Tutorial,
+      tutorial: context.for(Tutorial).create(),
       submitted: false,
     };
   },
   methods: {
     saveTutorial() {
-      let data = {
-        title: this.tutorial.title,
-        description: this.tutorial.description,
-      };
-
-      TutorialDataService.create(data)
-        .then((response: ResponseData) => {
-          this.tutorial.id = response.data.id;
-          console.log(response.data);
+      getEntityRef(this.tutorial).save()
+        .then((response) => {
+          this.tutorial = response;
+          console.log(response);
           this.submitted = true;
         })
-        .catch((e: Error) => {
+        .catch((e) => {
           console.log(e);
         });
     },
 
     newTutorial() {
       this.submitted = false;
-      this.tutorial = {} as Tutorial;
+      this.tutorial = context.for(Tutorial).create();
     },
   },
 });

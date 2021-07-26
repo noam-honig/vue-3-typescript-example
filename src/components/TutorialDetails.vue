@@ -60,24 +60,24 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TutorialDataService from "@/services/TutorialDataService";
+import { context } from "../http-common";
 import Tutorial from "@/types/Tutorial";
-import ResponseData from "@/types/ResponseData";
+import { getEntityRef } from "remult";
 
 export default defineComponent({
   name: "tutorial",
   data() {
     return {
-      currentTutorial: {} as Tutorial,
+      currentTutorial: context.for(Tutorial).create(),
       message: "",
     };
   },
   methods: {
     getTutorial(id: any) {
-      TutorialDataService.get(id)
-        .then((response: ResponseData) => {
-          this.currentTutorial = response.data;
-          console.log(response.data);
+      context.for(Tutorial).findId(id)
+        .then((response) => {
+          this.currentTutorial = response;
+          console.log(response);
         })
         .catch((e: Error) => {
           console.log(e);
@@ -85,17 +85,13 @@ export default defineComponent({
     },
 
     updatePublished(status: boolean) {
-      let data = {
-        id: this.currentTutorial.id,
-        title: this.currentTutorial.title,
-        description: this.currentTutorial.description,
-        published: status,
-      };
+      
+      this.currentTutorial.published = status;
 
-      TutorialDataService.update(this.currentTutorial.id, data)
-        .then((response: ResponseData) => {
-          console.log(response.data);
-          this.currentTutorial.published = status;
+      getEntityRef(this.currentTutorial).save()
+        .then((response) => {
+          console.log(response);
+          this.currentTutorial=response;
           this.message = "The status was updated successfully!";
         })
         .catch((e: Error) => {
@@ -104,9 +100,9 @@ export default defineComponent({
     },
 
     updateTutorial() {
-      TutorialDataService.update(this.currentTutorial.id, this.currentTutorial)
-        .then((response: ResponseData) => {
-          console.log(response.data);
+      getEntityRef(this.currentTutorial).save()
+        .then((response) => {
+          console.log(response);
           this.message = "The tutorial was updated successfully!";
         })
         .catch((e: Error) => {
@@ -115,9 +111,10 @@ export default defineComponent({
     },
 
     deleteTutorial() {
-      TutorialDataService.delete(this.currentTutorial.id)
-        .then((response: ResponseData) => {
-          console.log(response.data);
+      getEntityRef(this.currentTutorial).delete()
+      
+        .then(() => {
+          
           this.$router.push({ name: "tutorials" });
         })
         .catch((e: Error) => {

@@ -68,9 +68,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TutorialDataService from "@/services/TutorialDataService";
+import { context } from "../http-common";
 import Tutorial from "@/types/Tutorial";
-import ResponseData from "@/types/ResponseData";
 
 export default defineComponent({
   name: "tutorials-list",
@@ -84,10 +83,10 @@ export default defineComponent({
   },
   methods: {
     retrieveTutorials() {
-      TutorialDataService.getAll()
-        .then((response: ResponseData) => {
-          this.tutorials = response.data;
-          console.log(response.data);
+      context.for(Tutorial).find()
+        .then((response) => {
+          this.tutorials = response;
+          console.log(response);
         })
         .catch((e: Error) => {
           console.log(e);
@@ -96,7 +95,7 @@ export default defineComponent({
 
     refreshList() {
       this.retrieveTutorials();
-      this.currentTutorial = {} as Tutorial;
+      this.currentTutorial = context.for(Tutorial).create();
       this.currentIndex = -1;
     },
 
@@ -106,9 +105,9 @@ export default defineComponent({
     },
 
     removeAllTutorials() {
-      TutorialDataService.deleteAll()
-        .then((response: ResponseData) => {
-          console.log(response.data);
+      Tutorial.removeAll()
+        .then((response) => {
+          console.log(response);
           this.refreshList();
         })
         .catch((e: Error) => {
@@ -117,11 +116,11 @@ export default defineComponent({
     },
 
     searchTitle() {
-      TutorialDataService.findByTitle(this.title)
-        .then((response: ResponseData) => {
-          this.tutorials = response.data;
+      context.for(Tutorial).find({where:t=>t.title.contains(this.title)})
+        .then((response) => {
+          this.tutorials = response;
           this.setActiveTutorial({} as Tutorial);
-          console.log(response.data);
+          console.log(response);
         })
         .catch((e: Error) => {
           console.log(e);
