@@ -1,4 +1,4 @@
-import { Context } from "remult";
+import { Remult } from "remult";
 
-Context.apiBaseUrl='/api';
-export const context  = new Context();
+Remult.apiBaseUrl='/api';
+export const remult  = new Remult();

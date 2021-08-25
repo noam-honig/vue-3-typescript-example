@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { context } from "../http-common";
+import { remult } from "../http-common";
 import Tutorial from "@/types/Tutorial";
 import { getEntityRef } from "remult";
 
@@ -44,7 +44,7 @@ export default defineComponent({
   name: "add-tutorial",
   data() {
     return {
-      tutorial: context.for(Tutorial).create(),
+      tutorial: remult.repo(Tutorial).create(),
       submitted: false,
     };
   },
@@ -63,7 +63,7 @@ export default defineComponent({
 
     newTutorial() {
       this.submitted = false;
-      this.tutorial = context.for(Tutorial).create();
+      this.tutorial = remult.repo(Tutorial).create();
     },
   },
 });

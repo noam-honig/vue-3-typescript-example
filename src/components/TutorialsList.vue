@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { context } from "../http-common";
+import { remult } from "../http-common";
 import Tutorial from "@/types/Tutorial";
 
 export default defineComponent({
@@ -83,7 +83,7 @@ export default defineComponent({
   },
   methods: {
     retrieveTutorials() {
-      context.for(Tutorial).find()
+      remult.repo(Tutorial).find()
         .then((response) => {
           this.tutorials = response;
           console.log(response);
@@ -95,7 +95,7 @@ export default defineComponent({
 
     refreshList() {
       this.retrieveTutorials();
-      this.currentTutorial = context.for(Tutorial).create();
+      this.currentTutorial = remult.repo(Tutorial).create();
       this.currentIndex = -1;
     },
 
@@ -116,7 +116,7 @@ export default defineComponent({
     },
 
     searchTitle() {
-      context.for(Tutorial).find({where:t=>t.title.contains(this.title)})
+      remult.repo(Tutorial).find({where:t=>t.title.contains(this.title)})
         .then((response) => {
           this.tutorials = response;
           this.setActiveTutorial({} as Tutorial);

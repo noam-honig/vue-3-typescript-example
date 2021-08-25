@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { context } from "../http-common";
+import { remult } from "../http-common";
 import Tutorial from "@/types/Tutorial";
 import { getEntityRef } from "remult";
 
@@ -68,13 +68,13 @@ export default defineComponent({
   name: "tutorial",
   data() {
     return {
-      currentTutorial: context.for(Tutorial).create(),
+      currentTutorial: remult.repo(Tutorial).create(),
       message: "",
     };
   },
   methods: {
     getTutorial(id: any) {
-      context.for(Tutorial).findId(id)
+      remult.repo(Tutorial).findId(id)
         .then((response) => {
           this.currentTutorial = response;
           console.log(response);

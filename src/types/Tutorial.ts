@@ -1,17 +1,10 @@
-import { BackendMethod, Context, Entity, Field, getEntityRef } from "remult";
-import { v4 as v4uuid } from 'uuid';
+import { BackendMethod, Remult, Entity, Field, IdEntity } from "remult";
 
 @Entity<Tutorial>({
   key: 'tutorials',
-  allowApiCrud: true,
-  saving: tutorial => {
-    if (tutorial.context.backend && getEntityRef(tutorial).isNew())
-      tutorial.id = v4uuid();
-  }
+  allowApiCrud: true
 })
-export default class Tutorial {
-  @Field()
-  id: string = '';
+export default class Tutorial extends IdEntity {
   @Field()
   title: string = '';
   @Field()
@@ -19,15 +12,11 @@ export default class Tutorial {
   @Field()
   published?: boolean = false;
   @BackendMethod({ allowed: true })
-  static async removeAll(context?: Context) {
-    let repo = context!.for(Tutorial);
+  static async removeAll(remult?: Remult) {
+    let repo = remult!.repo(Tutorial);
     for await (const tutorial of repo.iterate()) {
       await repo.delete(tutorial);
     }
   }
-  constructor(private context: Context) {
-
-  }
 }
 
- 
