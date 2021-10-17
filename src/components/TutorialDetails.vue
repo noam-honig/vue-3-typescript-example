@@ -62,7 +62,6 @@
 import { defineComponent } from "vue";
 import { remult } from "../http-common";
 import Tutorial from "@/types/Tutorial";
-import { getEntityRef } from "remult";
 
 export default defineComponent({
   name: "tutorial",
@@ -88,7 +87,7 @@ export default defineComponent({
       
       this.currentTutorial.published = status;
 
-      getEntityRef(this.currentTutorial).save()
+      this.currentTutorial.save()
         .then((response) => {
           console.log(response);
           this.currentTutorial=response;
@@ -100,7 +99,7 @@ export default defineComponent({
     },
 
     updateTutorial() {
-      getEntityRef(this.currentTutorial).save()
+      this.currentTutorial.save()
         .then((response) => {
           console.log(response);
           this.message = "The tutorial was updated successfully!";
@@ -111,7 +110,7 @@ export default defineComponent({
     },
 
     deleteTutorial() {
-      getEntityRef(this.currentTutorial).delete()
+      this.currentTutorial.delete()
       
         .then(() => {
           

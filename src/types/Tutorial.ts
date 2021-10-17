@@ -1,7 +1,6 @@
 import { BackendMethod, Remult, Entity, Field, IdEntity } from "remult";
 
-@Entity<Tutorial>({
-  key: 'tutorials',
+@Entity<Tutorial>("tutorials", {
   allowApiCrud: true
 })
 export default class Tutorial extends IdEntity {

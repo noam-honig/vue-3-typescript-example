@@ -38,7 +38,6 @@
 import { defineComponent } from "vue";
 import { remult } from "../http-common";
 import Tutorial from "@/types/Tutorial";
-import { getEntityRef } from "remult";
 
 export default defineComponent({
   name: "add-tutorial",
@@ -50,7 +49,7 @@ export default defineComponent({
   },
   methods: {
     saveTutorial() {
-      getEntityRef(this.tutorial).save()
+      this.tutorial.save()
         .then((response) => {
           this.tutorial = response;
           console.log(response);
